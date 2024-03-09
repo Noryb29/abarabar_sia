@@ -1,11 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Models\User;
+use App\Traits\ApiResponser;
 
 class UserController extends Controller
 {
+    use ApiResponser;
     private $request;
 
     public function __construct(Request $request)
@@ -31,18 +35,18 @@ class UserController extends Controller
         $rules = [
             'username' => 'required|max:20',
             'password' => 'required|max:20',
-            
+            'gender'   => 'required|in:Male,Female',
         ];
 
         $this->validate($request, $rules);
+
         $user = User::create($request->all());
 
         return $this->successResponse($user, Response::HTTP_CREATED);
     }
     public function index() {
         $users = User::all();
-        return response()->json($users,200);
-        
+        return $this->successResponse($users);
     }
 
     /**
@@ -78,6 +82,7 @@ class UserController extends Controller
         $rules = [
             'username' => 'max:20',
             'password' => 'max:20',
+            'gender' => 'max:20'
         ];
 
         $this->validate($request, $rules);
