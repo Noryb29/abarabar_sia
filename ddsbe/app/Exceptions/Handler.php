@@ -56,33 +56,29 @@ class Handler extends ExceptionHandler
  {
     // http not found
     if ($exception instanceof HttpException) {
-    $code = $exception->getStatusCode();
-    $message = Response::$statusTexts[$code];
+    $code = $exception->getStatusCode();$message = Response::$statusTexts[$code];
+
     return $this->errorResponse($message, $code);
     }
     // instance not found
     if ($exception instanceof ModelNotFoundException) {
     $model = strtolower(class_basename($exception->getModel()));
-    return $this->errorResponse("Does not exist any instance of
-    {$model} with the given id",
-    Response::HTTP_NOT_FOUND);
+    return $this->errorResponse("Does not exist any instance of {$model} with the given id",Response::HTTP_NOT_FOUND);
     }
     // validation exception
     if ($exception instanceof ValidationException) {
-    $errors = $exception->validator->errors()->getMessages();
+        $errors = $exception->validator->errors()->getMessages();
     return $this->errorResponse($errors,
     Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     // access to forbidden
     if ($exception instanceof AuthorizationException) {
-    return $this->errorResponse($exception->getMessage(),
-    Response::HTTP_FORBIDDEN);
+        return $this->errorResponse($exception->getMessage(),Response::HTTP_FORBIDDEN);
     }
     // unauthorized access
     if ($exception instanceof AuthenticationException) {
-    return $this->errorResponse($exception->getMessage(),
-    Response::HTTP_UNAUTHORIZED);
+        return $this->errorResponse($exception->getMessage(),Response::HTTP_UNAUTHORIZED);
     }
 
     // if your are running in development environment
